@@ -3,6 +3,12 @@ import requests
 
 def dex(poke):
     resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{poke}")
+
+    if resposta.status_code == 404:
+        return "Pokémon not found. Check your typing and try again."
+    elif resposta.status_code != 200:
+        return "Something went wrong. Try again."
+
     dados = resposta.json()
 
     print("NATIONAL POKÉDEX\n\nPOKÉMON SUMMARY\n")
@@ -21,24 +27,26 @@ def dex(poke):
     print(f"Height: {round(dados['height']/10, 2)}M.")
     print(f"Weight: {round(dados['weight']/10, 2)}KG.")
 
-    print("Some Key-Moves:")
-    for x in range(5):
+    print("\nSome Key-Moves:")
+    for x in range(6):
 
         print(f"     {dados['moves'][x]['move']['name'].title()}")
 
-
+    
 
     #link para foto:
     #print(dados['sprites']['other']['dream_world']['front_default'])
 
-key = input("Type '1' to turn on the POKÉDEX.")
+key = input("Type '1' to turn on the POKÉDEX.\n")
 
 while(key == '1'):
 
-    poke = input("Wich Pokémon do you want to research?\n")
+    poke = input("Which Pokémon do you want to research?\n")
     print(dex(poke))
+    
+    
 
-    key = input("Type '1' to keep researching.")
+    key = input("Type '1' to keep researching.\n")
 
 print("POKÉDEX off.")
 
