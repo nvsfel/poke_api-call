@@ -28,10 +28,13 @@ def dex(poke):
     print(f"Weight: {round(dados['weight']/10, 2)}KG.")
 
     print("\nSome Key-Moves:")
-    for x in range(6):
 
-        print(f"     {dados['moves'][x]['move']['name'].title()}")
+    try:
+        for x in range(6):
 
+            print(f"     {dados['moves'][x]['move']['name'].title()}")
+    except:
+        pass
     
 
     #link para foto:
