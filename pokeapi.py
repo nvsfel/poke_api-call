@@ -1,10 +1,8 @@
-import requests
-import random
+import requests 
+import random #sortear versões e moves
+from functools import reduce #achatar listas (turn to flat list)
 
 def versoes():
-
-    
-    from functools import reduce
 
     resposta_version = requests.get("https://pokeapi.co/api/v2/version")
     dados_version = resposta_version.json()
@@ -23,7 +21,33 @@ def versoes():
 
 
     return versao_sorteada
+    #aparentemente, há versões que não contém determinados pokémon em suas entries.
+    #implantar uma solução para isso, provavelmente try/except.
 
+def mov(poke):
+   
+    resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{poke}")
+
+    dados = resposta.json()
+    moves = [] #declarar lista para preencher com a lista de listas de moves
+    moveset = [] #declarar lista para preencher com os moves tratados
+    try:
+        for x in range(311): #número baseado em Mew, pokémon com mais moves.
+              
+            moves.append(list({dados['moves'][x]['move']['name']}))
+    except:
+        pass
+
+    
+    moves = reduce(lambda x,y: x+y, moves)
+    for y in range(6):
+        moveset.append(random.choice(moves))
+
+    print("Some Key-Moves:\n") 
+    for move in moveset:
+        print(f"    {move.title()}")
+        if moveset[1] == moveset[0]: #contenção para pokémons com apenas 1 ataque.
+            break
 
 
 
@@ -76,20 +100,9 @@ def dex(poke):
     print(f"Height: {round(dados['height']/10, 2)}M.")
     print(f"Weight: {round(dados['weight']/10, 2)}KG.")
 
-    print("\nSome Key-Moves:")
-
-    # moveset + prevenção para pokémons com menos de 6 moves
-    try:
-        for x in range(6):
-
-            print(f"     {dados['moves'][x]['move']['name'].title()}")
-    except:
-        pass
-
-    #descrição do pokémon
-
+    mov(poke)
     entry(poke)
-    
+
 #main:
 
 key = input("Type '1' to turn on the POKÉDEX.\n")
@@ -98,8 +111,6 @@ while(key == '1'):
 
     poke = input("Which Pokémon do you want to research?\n")
     print(dex(poke))
-    
-    
 
     key = input("Type '1' to keep researching.\n")
 
