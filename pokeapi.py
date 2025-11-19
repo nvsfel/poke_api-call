@@ -64,7 +64,12 @@ def entry(poke):
     text = text.replace('\n', ' ')
     print(f"\n{text}\n*this description comes from {versao.title()} version.")
 
+def ability_entry(ability):
 
+    resposta_ability = requests.get(f"https://pokeapi.co/api/v2/ability/{ability}")
+    dados_ability = resposta_ability.json()
+
+    print(dados_ability['effect_entries'][1]['short_effect'] + '\n')
 
 
 def dex(poke):
@@ -94,8 +99,16 @@ def dex(poke):
         pass
 
     #habilidade
-    print(f"Ability: {dados['abilities'][0]['ability']['name'].title()}\n\n")
-
+    print(f"\nAbility: {dados['abilities'][0]['ability']['name'].title()}\n")
+    habs = [dados['abilities'][0]['ability']['name']]
+    ability_entry(habs[0])
+    try:
+        print(f"\nHidden ability: {dados['abilities'][1]['ability']['name'].title()}\n")
+        habs.append(dados['abilities'][1]['ability']['name'])
+        ability_entry(habs[1])
+    except:
+        pass
+              
     #peso e altura são dados em 
     print(f"Height: {round(dados['height']/10, 2)}M.")
     print(f"Weight: {round(dados['weight']/10, 2)}KG.")
