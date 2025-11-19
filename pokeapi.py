@@ -1,39 +1,56 @@
 import requests
+import random
+
+def versoes():
+
+    
+    from functools import reduce
+
+    resposta_version = requests.get("https://pokeapi.co/api/v2/version")
+    dados_version = resposta_version.json()
+
+    versions = []
+    for x in range(20):
+        #descobri que são 20 versões printando todas.
+        #todas as versões são trazidas em dicioários/sets.
+        #aqui, os sets são transformados em listas, criando uma lista de listas.
+        versions.append(list({dados_version['results'][x]['name']}))
+
+    #nessa linha, cada versão, contida em uma lista dentro da lista maior,
+    #é "dissolvida" em uma única lista com todas as versões.
+    versions = reduce(lambda x,y: x + y, versions)
+    versao_sorteada = random.choice(versions)
+
+
+    return versao_sorteada
+
+
+
 
 def entry(poke):
-
-    #chamada secundária (descrição de pokémon)
+        
     resposta_entry = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{poke}")
-    #resposta atribuída a 'dados_entry'
     dados_entry = resposta_entry.json()
 
-   
-    #dissecando a resposta da chamada:
-    for entry in dados_entry['flavor_text_entries']:
+    versao = versoes()
 
-        #separando exclusivamente respostas na 'linguagem''nome' == inglês
-        #e 'versão''nome' == red
-        if entry['language']['name'] == 'en' and entry ['version']['name'] == 'red':
+    for entry in dados_entry['flavor_text_entries']:
+        if entry['language']['name'] == 'en' and entry ['version']['name'] == versao:
             text = entry['flavor_text']
     text = text.replace('\n', ' ')
-    print(text + '\n')
+    print(f"\n{text}\n*this description comes from {versao.title()} version.")
 
 
 
 
 def dex(poke):
-
-    #chamada principal (busca pokémon)
     resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{poke}")
 
-    #resposta para erro de digitação
     if resposta.status_code == 404:
         return "Pokémon not found. Check your typing and try again."
-    #resposta generalista para outros erros
     elif resposta.status_code != 200:
         return "Something went wrong. Try again."
 
-    #resposta da busca principal atibuída a 'dados'
     dados = resposta.json()
 
     #Sumário
