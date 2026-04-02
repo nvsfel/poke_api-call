@@ -1,7 +1,48 @@
+import requests
+import random #sortear versões e moves
+from functools import reduce #achatar listas
+
+def moves(pokemon):
+
+    resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon}")
+    if resposta.status.code_code !=200:
+        return "Movepool not found. Try again."
+
+    dados_mov = resposta.json()
+    moves = [] #declarar lista para preencher com a lista de moves
+    moveset = [] #declarar lista para preencher com os moves tratados
+
+    try:
+        for x in range(311): #número baseado em Mew, pokémon com mais moves.
+            moves.append(list({dados['moves'][x]['move']['name']}))
+    except:
+        pass
+
+    moves = reduce(lambda x,y: x+y, moves)
+
+    #selecionar 6 moves dentro da movepool completa
+
+    
+    for y in range(6):
+        moveset.append(random.choice(moves))
+
+    output_mov = ""
+    output_mov += "Movepool:\n"
+    for move in moveset:
+        output_mov += f"{move.title()}\n"
+        if moveset[1] == moveset[0]:
+            break
+
+    return output_mov
+        
+        
+
+
+##FUNÇÕES DE INTERFACE
+
 import tkinter as tk
 from tkinter import ttk
 
-##FUNÇÕES
 def open_dex():
 
     nat_dex = tk.Toplevel()
@@ -57,13 +98,12 @@ def open_dex():
     #trazer entries
 
 
-
 ##INTERFACE
     
 main_dex = tk.Tk()
 main_dex.title("NVDEX")
     #proporções
-main_dex.geometry("500x700+700+180")
+main_dex.geometry("500x400+700+180")
 main_dex.config(bg='#790d0d')
 
 titulo = ttk.Label(
@@ -74,7 +114,7 @@ titulo = ttk.Label(
     anchor="center",
     background='#790d0d'
     )
-titulo.pack(ipadx=60, ipady=40)
+titulo.pack(pady=30)
 
 texto_main_dex = ttk.Label(
     main_dex,
@@ -85,7 +125,7 @@ texto_main_dex = ttk.Label(
     justify="center",
     background='#790d0d' 
     )
-texto_main_dex.pack(ipadx=20, ipady=10)
+texto_main_dex.pack(pady=30)
 
 abrir_dex = tk.Button(
     main_dex,
@@ -93,8 +133,7 @@ abrir_dex = tk.Button(
     bd=8,
     text="OPEN DEX"
     )
-
-abrir_dex.grid(row=0, column=1, columnspan=4)
+abrir_dex.pack(pady=30)
 
 fechar_dex = tk.Button(
     main_dex,
@@ -102,4 +141,4 @@ fechar_dex = tk.Button(
     bd=8,
     text="CLOSE DEX"
     )
-fechar_dex.pack(pady=10)
+fechar_dex.pack(pady=30)
