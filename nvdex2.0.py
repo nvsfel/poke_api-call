@@ -4,7 +4,6 @@ from tkinter import ttk
 ##FUNÇÕES
 def open_dex():
 
-    main_dex.destroy()#abre uma janela 'tk' vazia
     nat_dex = tk.Toplevel()
     nat_dex.title("NATIONAL DEX")
     nat_dex.geometry("500x700+700+180")
@@ -20,9 +19,22 @@ def open_dex():
         anchor="center",
         background='#790d0d'
         )
-    nat_dex.pack(ipadx=60, ipady=40)
+    approach_nat_dex.pack(ipadx=60, ipady=40)
 
-    entry_nat_dex = ttk.Entry
+    visor_nat_dex = tk.Entry(
+        nat_dex,
+        font=("arial",20),
+        bd=8,
+        justify="center"
+        )
+    visor_nat_dex.pack()
+
+    botao_nat_dex = tk.Button(
+        nat_dex,
+        text="GO!"
+        )
+    botao_nat_dex.pack(padx=10, pady=10)
+    
     #trazer entries
 
 
