@@ -31,9 +31,28 @@ def open_dex():
 
     botao_nat_dex = tk.Button(
         nat_dex,
+        bd=8,
         text="GO!"
         )
-    botao_nat_dex.pack(padx=10, pady=10)
+    botao_nat_dex.pack(padx=20, pady=40)
+
+    saida_nat_dex = tk.Listbox(
+        nat_dex,
+        bd=8,
+        width=60,
+        height=15,
+        justify="center"
+        )
+    saida_nat_dex.pack(padx=60, pady=0)
+
+    
+    botao_hub = tk.Button(
+        nat_dex,
+        bd=8,
+        text="HUB",
+        command = nat_dex.destroy
+        )
+    botao_hub.pack(padx=60, pady=40)
     
     #trazer entries
 
@@ -68,8 +87,19 @@ texto_main_dex = ttk.Label(
     )
 texto_main_dex.pack(ipadx=20, ipady=10)
 
-abrir_dex = tk.Button(main_dex, command=open_dex, text="OPEN DEX")
-abrir_dex.pack(pady=10)
+abrir_dex = tk.Button(
+    main_dex,
+    command=open_dex,
+    bd=8,
+    text="OPEN DEX"
+    )
 
-fechar_dex = tk.Button(main_dex, command=main_dex.destroy, text="CLOSE DEX")
+abrir_dex.grid(row=0, column=1, columnspan=4)
+
+fechar_dex = tk.Button(
+    main_dex,
+    command=main_dex.destroy,
+    bd=8,
+    text="CLOSE DEX"
+    )
 fechar_dex.pack(pady=10)
