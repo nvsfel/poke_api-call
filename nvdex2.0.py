@@ -2,10 +2,10 @@ import requests
 import random #sortear versões e moves
 from functools import reduce #achatar listas
 
-def moves(pokemon):
+def tecnicas(pokemon):
 
     resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon}")
-    if resposta.status.code_code !=200:
+    if resposta.status_code !=200:
         return "Movepool not found. Try again."
 
     dados_mov = resposta.json()
@@ -14,7 +14,7 @@ def moves(pokemon):
 
     try:
         for x in range(311): #número baseado em Mew, pokémon com mais moves.
-            moves.append(list({dados['moves'][x]['move']['name']}))
+            moves.append(list({dados_mov['moves'][x]['move']['name']}))
     except:
         pass
 
@@ -34,6 +34,110 @@ def moves(pokemon):
             break
 
     return output_mov
+
+def descricao(pokemon):
+
+    resposta_entry = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{pokemon}")
+
+    dados_entry = resposta_entry.json()
+
+    text = ' Pokémon description not found.' #Verificação p/ erro
+
+    versoes_validas = []
+
+    for entry in dados_entry['flavor_text_entries']:
+        if entry['language']['name'] == 'en':
+            versoes_validas.append(entry['version']['name'])
+
+    versao_selecionada = random.choice(versoes_validas)
+
+    #Dentre todos os dados de descrição, esse loop, através da condicional, compara o dado de descrição
+    #com o da versão selecionada em inglês..
+
+    for entry in dados_entry['flavor_text_entries']:
+        if entry['language']['name'] == 'en' and entry['version']['name'] == versao_selecionada:
+            text = f"{entry['flavor_text']}"
+            break
+
+        text = text.replace('','')
+        text += f"\n*description from {versao_selecionada.title()} version."
+        return text
+
+def habilidade_entry(habilidade):
+
+    resposta_habilidade = requests.get(f"https://pokeapi.co/api/v2/ability/{habilidade}")
+    dados_habilidade = resposta_habilidade.json()
+
+    output_habilidade = ''
+
+    try:
+        output_habilidade = dados_habilidade['effect_entries'][2]['short_effect'] + '\n'
+
+    except:
+        pass
+
+    return output_habilidade
+
+def dex(pokemon_pesquisado):
+    
+    pokemon = pokemon_pesquisado.get()
+    resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon}")
+
+    #verificação de erro
+
+    mensagens_erro = ['What is Team Rocket plotting now?','Is there a nearby Pokémon tricking us?', 'The internet connection in this Region is oscillating... Bad sign.']
+    mensagem_da_vez = random.choice(mensagens_erro)
+
+    if resposta.status_code ==404:
+        return "Pokémon not found. Check your typing and try again."
+    elif resposta.status_code != 200:
+        return "Something went wrong. {mensagem_da_vez}"
+
+    dados = resposta.json()
+
+    output_dex = ''
+    output_dex+= "NATIONAL POKÉDEX\n\nPOKÉMON SUMMARY\n"
+    output_dex+= f"Pokédex ID #{dados['id']}\n"
+    output_dex+= f"Name: {dados['name'].title()}\n"
+    output_dex+= f"Type: {dados['types'][0]['type']['name'].title()}\n"
+
+    try:
+        output_dex+= f"Secondary Type: {dados['types'][1]['type']['name'].title()}\n"
+    except:
+        pass
+
+    output_dex+= f"\nAbility: {dados['abilities'][0]['ability']['name'].title()}\n"
+    habs = [dados['abilities'][0]['ability']['name']]
+    output_dex+=habilidade_entry(habs[0])
+    try:
+        output_dex+= f"Hidden ability: {dados['abilities'][1]['ability']['name'].title()}\n"
+        habs.append(dados['abilities'][1]['ability']['name']+'\n')
+        output_dex+=habilidade_entry(habs[1])
+        
+    except:
+        pass
+    #peso e altura são dados em hectogramas e em decímetros, respectivamente.
+    output_dex+= f"Height: {round(dados['height']/10, 2)}M.\n"
+    output_dex+= f"Weight: {round(dados['weight']/10, 2)}KG.\n\n"
+    
+    
+    output_dex+=tecnicas(pokemon) #importar moveset
+    try:
+        output_dex+=habilidade_entry(pokemon) #importar descrição
+    except:
+        output_dex += "\n[Description could not be loaded.]"
+
+    return output_dex
+
+def pesquisar(entrada_do_visor):
+
+    pokemon = entrada_do_visor.get()
+
+    texto_dex = dex(entrada_do_visor)
+
+    output.config(text=texto_dex)
+
+                                   
         
         
 
@@ -62,18 +166,22 @@ def open_dex():
         )
     approach_nat_dex.pack(ipadx=60, ipady=40)
 
+
+    global visor_nat_dex
     visor_nat_dex = tk.Entry(
         nat_dex,
         font=("arial",20),
         bd=8,
         justify="center"
         )
+    
     visor_nat_dex.pack()
 
     botao_nat_dex = tk.Button(
         nat_dex,
         bd=8,
-        text="GO!"
+        text="GO!",
+        command = lambda: pesquisar(visor_nat_dex)
         )
     botao_nat_dex.pack(padx=20, pady=40)
 
@@ -142,3 +250,7 @@ fechar_dex = tk.Button(
     text="CLOSE DEX"
     )
 fechar_dex.pack(pady=30)
+
+
+
+main_dex.mainloop()
