@@ -129,13 +129,13 @@ def dex(pokemon_pesquisado):
 
     return output_dex
 
-def pesquisar(entrada_do_visor):
+def pesquisar(visor_nat_dex):
 
-    pokemon = entrada_do_visor.get()
+    pokemon = visor_nat_dex.get()
 
-    texto_dex = dex(entrada_do_visor)
+    texto_dex = dex(visor_nat_dex)
 
-    output.config(text=texto_dex)
+    saida_nat_dex.config(text=texto_dex)
 
                                    
         
@@ -185,7 +185,8 @@ def open_dex():
         )
     botao_nat_dex.pack(padx=20, pady=40)
 
-    saida_nat_dex = tk.Listbox(
+    global saida_nat_dex
+    saida_nat_dex = tk.Label(
         nat_dex,
         bd=8,
         width=60,
