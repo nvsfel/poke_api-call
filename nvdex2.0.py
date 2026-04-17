@@ -130,7 +130,7 @@ def dex(pokemon_pesquisado):
     return output_dex
 
 def pesquisar(visor_nat_dex):
-
+    
     pokemon = visor_nat_dex.get()
 
     texto_dex = dex(visor_nat_dex)
@@ -150,12 +150,13 @@ def pesquisar(visor_nat_dex):
 import tkinter as tk
 from tkinter import ttk
 
-def open_dex():
+def open_dex(event=None):
 
     nat_dex = tk.Toplevel()
     nat_dex.title("NATIONAL DEX")
     nat_dex.geometry("500x700+700+180")
-
+    nat_dex.bind("<Return>", lambda e: pesquisar(visor_nat_dex))
+    nat_dex.bind("<KP_Enter>", lambda e: pesquisar(visor_nat_dex))
     nat_dex.config(bg='#790d0d')
 
     
@@ -185,6 +186,7 @@ def open_dex():
         bd=8,
         text="GO!",
         command = lambda: pesquisar(visor_nat_dex)
+        #linha que possibilita o bind (usar o enter como "clique" em função com parametro)
         )
     botao_nat_dex.pack(padx=20, pady=40)
 
@@ -214,8 +216,9 @@ def open_dex():
     
 main_dex = tk.Tk()
 main_dex.title("NVDEX")
-    #proporções
-main_dex.geometry("500x400+700+180")
+main_dex.geometry("500x400+700+180") #proporções
+main_dex.bind("<Return>", open_dex)
+main_dex.bind("<KP_Enter>", open_dex)
 main_dex.config(bg='#790d0d')
 
 titulo = ttk.Label(
