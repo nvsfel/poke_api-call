@@ -59,9 +59,9 @@ def descricao(pokemon):
             text = f"{entry['flavor_text']}"
             break
 
-        text = text.replace('','')
-        text += f"\n*description from {versao_selecionada.title()} version."
-        return text
+        
+    text += f"\n\n*description from {versao_selecionada.title()} version."
+    return text
 
 def habilidade_entry(habilidade):
 
@@ -122,8 +122,9 @@ def dex(pokemon_pesquisado):
     
     
     output_dex+=tecnicas(pokemon) #importar moveset
+    output_dex+="\n"
     try:
-        output_dex+=habilidade_entry(pokemon) #importar descrição
+        output_dex+=descricao(pokemon) #importar descrição
     except:
         output_dex += "\n[Description could not be loaded.]"
 
