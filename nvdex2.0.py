@@ -135,7 +135,10 @@ def pesquisar(visor_nat_dex):
 
     texto_dex = dex(visor_nat_dex)
 
-    saida_nat_dex.config(text=texto_dex)
+    saida_nat_dex.config(state="normal")
+    saida_nat_dex.delete("1.0", tk.END) #apagar o ultimo pokemon digitado após pesquisar
+    saida_nat_dex.insert(tk.END, texto_dex) #escrever novos dados
+    saida_nat_dex.config(state="disabled") #trancar a tela
 
                                    
         
@@ -170,7 +173,7 @@ def open_dex():
     global visor_nat_dex
     visor_nat_dex = tk.Entry(
         nat_dex,
-        font=("arial",20),
+        font=("Verdana",20),
         bd=8,
         justify="center"
         )
@@ -186,12 +189,12 @@ def open_dex():
     botao_nat_dex.pack(padx=20, pady=40)
 
     global saida_nat_dex
-    saida_nat_dex = tk.Label(
+    saida_nat_dex = tk.Text(
         nat_dex,
+        font="Verdana",
         bd=8,
         width=60,
-        height=15,
-        justify="center"
+        height=15        
         )
     saida_nat_dex.pack(padx=60, pady=0)
 
