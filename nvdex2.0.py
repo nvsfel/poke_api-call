@@ -1,12 +1,14 @@
 import requests
 import random #sortear versões e moves
 from functools import reduce #achatar listas
+import tkinter as tk
+from tkinter import messagebox
 
 def tecnicas(pokemon):
 
     resposta = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon}")
     if resposta.status_code !=200:
-        return "Movepool not found. Try again."
+        return "Something went wrong. Please try again."
 
     dados_mov = resposta.json()
     moves = [] #declarar lista para preencher com a lista de moves
@@ -89,7 +91,7 @@ def dex(pokemon_pesquisado):
     mensagem_da_vez = random.choice(mensagens_erro)
 
     if resposta.status_code ==404:
-        return "Pokémon not found. Check your typing and try again."
+        return "Cannot recognize this Pokémon. Check your typing and try again."
     elif resposta.status_code != 200:
         return "Something went wrong. {mensagem_da_vez}"
 
@@ -132,8 +134,13 @@ def dex(pokemon_pesquisado):
 
 def pesquisar(visor_nat_dex):
     
-    pokemon = visor_nat_dex.get()
-
+    try:
+        pokemon = visor_nat_dex.get()
+        if pokemon == "":
+            messagebox.showwarning("Warning","Enter pokémon name or number!",parent=nat_dex)
+            return
+    except:
+        pass
     texto_dex = dex(visor_nat_dex)
 
     saida_nat_dex.config(state="normal")
@@ -148,11 +155,9 @@ def pesquisar(visor_nat_dex):
 
 ##FUNÇÕES DE INTERFACE
 
-import tkinter as tk
-from tkinter import ttk
 
 def open_dex(event=None):
-
+    global nat_dex #como é uma aba subordinada, qualquer messagebox(e afins) necessita que o nat esteja globalizado
     nat_dex = tk.Toplevel()
     nat_dex.title("WORLDWIDE POKEDEX")
     nat_dex.geometry("500x700+700+180")
@@ -223,8 +228,17 @@ def open_dex(event=None):
         activeforeground="#000000"
         )
     botao_hub.pack(padx=60, pady=40)
+
+def fechar_dex():
+    fechar = messagebox.askyesno(
+        "Warning",
+        "Do you want really to close the Dex?",
+        default=messagebox.NO,
+        parent=main_dex
+        )
+    if fechar:
+        main_dex.destroy()
     
-    #trazer entries
 
 
 ##INTERFACE
@@ -236,7 +250,7 @@ main_dex.bind("<Return>", open_dex)
 main_dex.bind("<KP_Enter>", open_dex)
 main_dex.config(bg='#790d0d')
 
-titulo = ttk.Label(
+titulo = tk.Label(
     main_dex,
     text="nvDEX",
     font=("Helvetica",15),
@@ -275,7 +289,7 @@ abrir_dex.pack(pady=30)
 
 fechar_dex = tk.Button(
     main_dex,
-    command=main_dex.destroy,
+    command=fechar_dex,
     bd=8,
     text="CLOSE DEX",
     font =("Verdana", 10),
