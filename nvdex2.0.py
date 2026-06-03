@@ -154,22 +154,24 @@ from tkinter import ttk
 def open_dex(event=None):
 
     nat_dex = tk.Toplevel()
-    nat_dex.title("NATIONAL DEX")
+    nat_dex.title("WORLDWIDE POKEDEX")
     nat_dex.geometry("500x700+700+180")
     nat_dex.bind("<Return>", lambda e: pesquisar(visor_nat_dex))
     nat_dex.bind("<KP_Enter>", lambda e: pesquisar(visor_nat_dex))
     nat_dex.config(bg='#790d0d')
 
     
-    approach_nat_dex = ttk.Label(
+    approach_nat_dex = tk.Label(
         nat_dex,
-        text="Which Creature do you want to Research?",
-        font=("Helvetica",15),
+        text="Which creature do you want to research?",
+        font =("Courier New", 10, "bold"),
         foreground="#b3a125",
         anchor="center",
-        background='#790d0d'
+        background='#212121',
+        relief="sunken",
+        bd=10
         )
-    approach_nat_dex.pack(ipadx=60, ipady=40)
+    approach_nat_dex.pack(ipadx=12, ipady=20)
 
 
     global visor_nat_dex
@@ -186,7 +188,13 @@ def open_dex(event=None):
         nat_dex,
         bd=8,
         text="GO!",
-        command = lambda: pesquisar(visor_nat_dex)
+        font =("Verdana", 10),
+        command = lambda: pesquisar(visor_nat_dex),
+        bg="#fbc02d",
+        fg="#000000",
+        relief="flat",
+        activebackground="#f57f14",
+        activeforeground="#000000"
         #linha que possibilita o bind (usar o enter como "clique" em função com parametro)
         )
     botao_nat_dex.pack(padx=20, pady=40)
@@ -206,7 +214,13 @@ def open_dex(event=None):
         nat_dex,
         bd=8,
         text="HUB",
-        command = nat_dex.destroy
+        font =("Verdana", 10),
+        command = nat_dex.destroy,
+        bg="#fbc02d",
+        fg="#000000",
+        relief="flat",
+        activebackground="#f57f14",
+        activeforeground="#000000"
         )
     botao_hub.pack(padx=60, pady=40)
     
@@ -216,7 +230,7 @@ def open_dex(event=None):
 ##INTERFACE
     
 main_dex = tk.Tk()
-main_dex.title("NVDEX")
+main_dex.title("WORLDWIDE POKÉDEX")
 main_dex.geometry("500x400+700+180") #proporções
 main_dex.bind("<Return>", open_dex)
 main_dex.bind("<KP_Enter>", open_dex)
@@ -230,24 +244,32 @@ titulo = ttk.Label(
     anchor="center",
     background='#790d0d'
     )
-titulo.pack(pady=30)
+#titulo.pack(pady=30) suspenso
 
-texto_main_dex = ttk.Label(
+texto_main_dex = tk.Label(
     main_dex,
-    text = "HELLO TRAINER, WELCOME TO THE NATIONAL POKÉDEX",
-    font =("Helvetica", 10),
+    text = "HELLO TRAINER, WELCOME TO THE WORLDWIDE POKÉDEX",
+    font =("Courier New", 10),
     foreground="#b3a125",
     anchor="center",
     justify="center",
-    background='#790d0d' 
+    background='#212121',
+    relief="sunken",
+    bd=4
     )
-texto_main_dex.pack(pady=30)
+texto_main_dex.pack(pady=40)
 
 abrir_dex = tk.Button(
     main_dex,
     command=open_dex,
     bd=8,
-    text="OPEN DEX"
+    text="OPEN DEX",
+    font =("Verdana", 10),
+    bg="#fbc02d",
+    fg="#000000",
+    relief="flat",
+    activebackground="#f57f14",
+    activeforeground="#000000"
     )
 abrir_dex.pack(pady=30)
 
@@ -255,7 +277,13 @@ fechar_dex = tk.Button(
     main_dex,
     command=main_dex.destroy,
     bd=8,
-    text="CLOSE DEX"
+    text="CLOSE DEX",
+    font =("Verdana", 10),
+    bg="#fbc02d",
+    fg="#000000",
+    relief="flat",
+    activebackground="#f57f14",
+    activeforeground="#000000"
     )
 fechar_dex.pack(pady=30)
 
