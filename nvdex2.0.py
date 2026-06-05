@@ -170,18 +170,26 @@ def pegar_sprites():
 def screen_dex(event=None):
     screen_dex = tk.Toplevel()
     screen_dex.title("WORLDWIDE POKEDEX")
-    screen_dex.geometry("500x700+700+180")
+    screen_dex.geometry("500x700+700+50")
     screen_dex.config(bg='#790d0d')
 
     img_frentebruta = Image.open(pegar_sprites())
     img_frentelimpa = img_frentebruta.resize((250,250))
     sprite_frente = ImageTk.PhotoImage(img_frentelimpa)
 
-    fotofrente = tk.Label(screen_dex)
+    fotofrente = tk.Label(
+        screen_dex,
+        bg="#212121",
+        relief="sunken",
+        bd=10,
+        padx=10,
+        pady=10
+        )
     fotofrente.config(image=sprite_frente)
     fotofrente.image = sprite_frente
 
     fotofrente.pack(pady=20)
+    
 
     
 
@@ -189,7 +197,7 @@ def open_dex(event=None):
     global nat_dex #como é uma aba subordinada, qualquer messagebox(e afins) necessita que o nat esteja globalizado
     nat_dex = tk.Toplevel()
     nat_dex.title("WORLDWIDE POKEDEX")
-    nat_dex.geometry("500x700+700+180")
+    nat_dex.geometry("500x700+200+50")
     nat_dex.bind("<Return>", lambda e: pesquisar(visor_nat_dex))
     nat_dex.bind("<KP_Enter>", lambda e: pesquisar(visor_nat_dex))
     nat_dex.config(bg='#790d0d')
@@ -290,7 +298,7 @@ def fechar_dex():
     
 main_dex = tk.Tk()
 main_dex.title("WORLDWIDE POKÉDEX")
-main_dex.geometry("500x400+700+180") #proporções
+main_dex.geometry("500x400+25+50") #proporções
 main_dex.bind("<Return>", open_dex)
 main_dex.bind("<KP_Enter>", open_dex)
 main_dex.config(bg='#790d0d')
