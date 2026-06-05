@@ -3,6 +3,9 @@ import random #sortear versões e moves
 from functools import reduce #achatar listas
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
+from io import BytesIO
+
 
 def tecnicas(pokemon):
 
@@ -150,11 +153,37 @@ def pesquisar(visor_nat_dex):
 
                                    
         
-        
+def pegar_sprites():      
 
+    pokemon = visor_nat_dex.get()
+    resposta_imgs = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon}/")
+    resposta=''
+    resposta=resposta_imgs.json()
+    extrair_frente = resposta['sprites']['other']['home']['front_default']
 
+    link_frente = requests.get(extrair_frente)
+    imgcrua_frente = BytesIO(link_frente.content)
+    return imgcrua_frente
+    
 ##FUNÇÕES DE INTERFACE
 
+def screen_dex(event=None):
+    screen_dex = tk.Toplevel()
+    screen_dex.title("WORLDWIDE POKEDEX")
+    screen_dex.geometry("500x700+700+180")
+    screen_dex.config(bg='#790d0d')
+
+    img_frentebruta = Image.open(pegar_sprites())
+    img_frentelimpa = img_frentebruta.resize((250,250))
+    sprite_frente = ImageTk.PhotoImage(img_frentelimpa)
+
+    fotofrente = tk.Label(screen_dex)
+    fotofrente.config(image=sprite_frente)
+    fotofrente.image = sprite_frente
+
+    fotofrente.pack(pady=20)
+
+    
 
 def open_dex(event=None):
     global nat_dex #como é uma aba subordinada, qualquer messagebox(e afins) necessita que o nat esteja globalizado
@@ -214,6 +243,20 @@ def open_dex(event=None):
         )
     saida_nat_dex.pack(padx=60, pady=0)
 
+    botao_see = tk.Button(
+        nat_dex,
+        bd=8,
+        text="SEE POKÉMON",
+        font =("Verdana", 10),
+        command = screen_dex,
+        bg="#fbc02d",
+        fg="#000000",
+        relief="flat",
+        activebackground="#f57f14",
+        activeforeground="#000000"
+        )
+    botao_see.pack(padx=60, pady=20)
+
     
     botao_hub = tk.Button(
         nat_dex,
@@ -227,7 +270,9 @@ def open_dex(event=None):
         activebackground="#f57f14",
         activeforeground="#000000"
         )
-    botao_hub.pack(padx=60, pady=40)
+    botao_hub.pack(padx=60, pady=20)
+
+
 
 def fechar_dex():
     fechar = messagebox.askyesno(
